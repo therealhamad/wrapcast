@@ -3,7 +3,7 @@ import React from "react";
 import { ShootingStars } from "@/components/ui/shooting-stars";
 import { StarsBackground } from "@/components/ui/stars-background";
 import {Hero} from "./components/Hero";
-import {Scores} from "./components/Scoreboard";
+import ChartsPage from "./components/Scoreboard";
 
 export function WrapCast() {
   return (
@@ -14,7 +14,7 @@ export function WrapCast() {
       </div>
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen">
         <Hero />
-        <Scores />
+        <ChartsPage />
       </div>
     </div>
   );

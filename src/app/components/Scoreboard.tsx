@@ -1,6 +1,85 @@
 "use client";
 
-import Image from "next/image";
+import React, { useRef, useEffect } from 'react';
+import { Chart, BarElement, CategoryScale, LinearScale, Legend, Title, Tooltip, BarController } from 'chart.js';
+
+// Register Chart.js components
+Chart.register(BarElement, CategoryScale, LinearScale, Legend, Title, Tooltip, BarController);
+
+const ChartsPage: React.FC = () => {
+  const chartRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const ctx = chartRef.current?.getContext('2d');
+
+    if (ctx) {
+      const jsonData = {
+        result: {
+          casts: [
+            {
+              text: 'gm @clanker ...',
+              replies: { count: 2 },
+              reactions: { count: 1 },
+            },
+            {
+              text: 'where can i find data of farcaster users with solana wallets linked',
+              replies: { count: 3 },
+              reactions: { count: 12 },
+            },
+          ],
+        },
+      };
+
+      const casts = jsonData.result.casts;
+      const labels = casts.map((cast) => cast.text);
+      const replyCounts = casts.map((cast) => cast.replies.count);
+      const reactionCounts = casts.map((cast) => cast.reactions.count);
+
+      // Create the chart
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Replies',
+              data: replyCounts,
+              backgroundColor: 'rgba(75, 192, 192, 0.6)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
+            },
+            {
+              label: 'Reactions',
+              data: reactionCounts,
+              backgroundColor: 'rgba(153, 102, 255, 0.6)',
+              borderColor: 'rgba(153, 102, 255, 1)',
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Daksh Kulshrestha Casts and Reactions',
+            },
+          },
+        },
+      });
+    }
+  }, []);
+
+  return <canvas ref={chartRef} />;
+};
+
+export default ChartsPage;
+
+
+/*import Image from "next/image";
 import React from "react";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import Link from "next/link";
@@ -67,4 +146,4 @@ export function Scores() {
           className="text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
         >
           100 mentions | 50 likes | 20 replies | 10 retweets
-        </CardItem>
+        </CardItem>*/

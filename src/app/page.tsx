@@ -3,6 +3,8 @@ import React from "react";
 import { ShootingStars } from "@/components/ui/shooting-stars";
 import { StarsBackground } from "@/components/ui/stars-background";
 import {Hero} from "./components/Hero";
+//import ChartsPage from "./components/Scoreboard";
+//import Example from "./components/Scoreboard";
 import ChartsPage from "./components/Scoreboard";
 
 export function WrapCast() {

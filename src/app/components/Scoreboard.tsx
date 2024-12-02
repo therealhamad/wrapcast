@@ -1,18 +1,20 @@
 "use client";
 
 import React, { useRef, useEffect } from 'react';
-import { Chart, BarElement, CategoryScale, LinearScale, Legend, Title, Tooltip, BarController } from 'chart.js';
+import { Chart, BarElement, CategoryScale, LinearScale, Legend, Title, Tooltip, BarController, LineController, LineElement, PointElement } from 'chart.js';
 
 // Register Chart.js components
-Chart.register(BarElement, CategoryScale, LinearScale, Legend, Title, Tooltip, BarController);
+Chart.register(BarElement, CategoryScale, LinearScale, Legend, Title, Tooltip, BarController, LineController, LineElement, PointElement);
 
 const ChartsPage: React.FC = () => {
-  const chartRef = useRef<HTMLCanvasElement | null>(null);
+  const lineChartRef = useRef<HTMLCanvasElement | null>(null);
+  const barChartRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    const ctx = chartRef.current?.getContext('2d');
+    const lineCtx = lineChartRef.current?.getContext('2d');
+    const barCtx = barChartRef.current?.getContext('2d');
 
-    if (ctx) {
+    if (lineCtx && barCtx) {
       const jsonData = {
         result: {
           casts: [
@@ -35,8 +37,46 @@ const ChartsPage: React.FC = () => {
       const replyCounts = casts.map((cast) => cast.replies.count);
       const reactionCounts = casts.map((cast) => cast.reactions.count);
 
-      // Create the chart
-      new Chart(ctx, {
+      // Create the line chart
+      new Chart(lineCtx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Replies',
+              data: replyCounts,
+              backgroundColor: 'rgba(75, 192, 192, 0.6)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
+              fill: false,
+            },
+            {
+              label: 'Reactions',
+              data: reactionCounts,
+              backgroundColor: 'rgba(153, 102, 255, 0.6)',
+              borderColor: 'rgba(153, 102, 255, 1)',
+              borderWidth: 1,
+              fill: false,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Daksh Kulshrestha Casts and Reactions (Line Chart)',
+            },
+          },
+        },
+      });
+
+      // Create the bar chart
+      new Chart(barCtx, {
         type: 'bar',
         data: {
           labels,
@@ -65,7 +105,7 @@ const ChartsPage: React.FC = () => {
             },
             title: {
               display: true,
-              text: 'Daksh Kulshrestha Casts and Reactions',
+              text: 'Daksh Kulshrestha Casts and Reactions (Bar Chart)',
             },
           },
         },
@@ -73,7 +113,13 @@ const ChartsPage: React.FC = () => {
     }
   }, []);
 
-  return <canvas ref={chartRef} />;
+return (
+    <div className='flex flex-row justify-between'>
+        <canvas ref={lineChartRef} style={{ width: '45%' }} />
+
+        <canvas ref={barChartRef} style={{ width: '45%' }} />
+    </div>
+);
 };
 
 export default ChartsPage;
